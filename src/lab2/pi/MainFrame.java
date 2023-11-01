@@ -28,13 +28,11 @@ public class MainFrame extends JFrame {
     // Размеры окна приложения в виде констант
     private static final int WIDTH = 400;
     private static final int HEIGHT = 320;
-    // Текстовые поля для считывания значений переменных,
-// как компоненты, совместно используемые в различных методах
+    // Текстовые поля для считывания значений переменных
     private JTextField textFieldX;
     private JTextField textFieldY;
     private JTextField textFieldZ;
-    // Текстовое поле для отображения результата,
-// как компонент, совместно используемый в различных методах
+    // Текстовое поле для отображения результата
     private JTextField textFieldResult;
     // Группа радио-кнопок для обеспечения уникальности выделения в группе
     private ButtonGroup radioButtons = new ButtonGroup();
@@ -45,13 +43,15 @@ public class MainFrame extends JFrame {
     private Box hboxFormulaImage = Box.createHorizontalBox();
     private Box hboxMemoryType = Box.createHorizontalBox();
 
+    // вставка картинки
     private ImageIcon imageIcon = new ImageIcon("C:\\Users\\37529\\IdeaProjects\\qwe\\lab2\\f1.png");
-    // private ImageIcon imageIcon = new ImageIcon("C:\\Users\\37529\\IdeaProjects\\qwe\\lab2\\f2.png");
     private JLabel imageLabel = new JLabel(imageIcon);
+    // айди формул для использования
     private int formulaId = 1;
     private int memoryId = 1;
-    // Формула №1 для рассчѐта
 
+
+    // Формула №1 для рассчѐта
     public Double calculate1(Double x, Double y, Double z) {
         Double up = Math.pow(Math.log(z) + (sin(Math.PI*z)*(sin(Math.PI*z))), 1/4);
         Double down = Math.pow((y*y+Math.exp(Math.cos(x))+ Math.sin(y)), Math.sin(x));
@@ -63,15 +63,15 @@ public class MainFrame extends JFrame {
         Double down = cbrt(1+y*y*y);
         return up/down;
     }
-    // Вспомогательный метод для добавления кнопок на панель
+
+    // метод для добавления кнопок на панель
     private void addRadioButton(String buttonName, final int formulaId) {
-         JPanel imagePane = new JPanel();
+        JPanel imagePane = new JPanel();
         JRadioButton button = new JRadioButton(buttonName);
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 MainFrame.this.formulaId = formulaId;
                 imageIcon.setImage(new ImageIcon("C:\\Users\\37529\\IdeaProjects\\qwe\\lab2\\f"+formulaId+".png").getImage());
-
                 hboxFormulaImage.updateUI();
                 imageLabel.revalidate();
                 imageLabel.repaint();
@@ -82,9 +82,9 @@ public class MainFrame extends JFrame {
         hboxFormulaType.add(button);
     }
 
-    private void addRadioButtonMemory(String buttonName, final int memoryId, Box hbox) { // Вспомогательный метод для добавления кнопок на панель
+    //  метод для добавления кнопок памяти и переменных на панель
+    private void addRadioButtonMemory(String buttonName, final int memoryId, Box hbox) {
         JRadioButton button = new JRadioButton(buttonName);
-
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 MainFrame.this.memoryId = memoryId;
@@ -99,24 +99,34 @@ public class MainFrame extends JFrame {
         super("Вычисление формулы");
         setSize(WIDTH, HEIGHT);
         Toolkit kit = Toolkit.getDefaultToolkit();
+        // Отцентрировать окно приложения на экране
+        setLocation((kit.getScreenSize().width - WIDTH)/2,
+                (kit.getScreenSize().height - HEIGHT)/2);
+
+
+        // JLabel с изображением
+        hboxFormulaImage.add(imageLabel);
+        //hboxFormulaType.add(Box.createHorizontalGlue());
+        addRadioButton("Формула 1", 1);
+        hboxFormulaType.add(Box.createHorizontalStrut(20));
+        addRadioButton("Формула 2", 2);
+        radioButtons.setSelected(radioButtons.getElements().nextElement().getModel(), true);
+        //hboxFormulaType.add(Box.createHorizontalGlue());
+        //hboxFormulaType.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+
         JLabel textFieldMemoryData1 = new JLabel("0");
         JLabel textFieldMemoryData2 = new JLabel("0");
         JLabel textFieldMemoryData3 = new JLabel("0");
+
+
+        // кнопочки переменных
         Box hboxMemoryVariables = Box.createHorizontalBox();
         addRadioButtonMemory("Переменная 1", 4, hboxMemoryVariables);
         addRadioButtonMemory("Переменная 2", 5, hboxMemoryVariables);
         addRadioButtonMemory("Переменная 3", 6, hboxMemoryVariables);
-// Отцентрировать окно приложения на экране
-        setLocation((kit.getScreenSize().width - WIDTH)/2,
-                (kit.getScreenSize().height - HEIGHT)/2);
-        // Создайте JLabel с изображением
-        hboxFormulaImage.add(imageLabel);
-        hboxFormulaType.add(Box.createHorizontalGlue());
-        addRadioButton("Формула 1", 1);
-        addRadioButton("Формула 2", 2);
-        radioButtons.setSelected(radioButtons.getElements().nextElement().getModel(), true);
-        hboxFormulaType.add(Box.createHorizontalGlue());
-        hboxFormulaType.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+
+
+
         JButton buttonMemoryPlus = new JButton("M+");
         buttonMemoryPlus.addActionListener(new ActionListener() {
             @Override
@@ -192,18 +202,15 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-// Коробка кнопок с работой с памятью
-        hboxMemoryType.add(Box.createHorizontalGlue());
 
+        // Коробка кнопок с работой с памятью
+        hboxMemoryType.add(Box.createHorizontalGlue());
         addRadioButtonMemory("Память 1", 1, hboxMemoryType);
         addRadioButtonMemory("Память 2", 2, hboxMemoryType);
         addRadioButtonMemory("Память 3", 3, hboxMemoryType);
-
-
         radioButtonsMemory.setSelected(radioButtonsMemory.getElements().nextElement().getModel(), true);
-
         hboxMemoryType.add(Box.createHorizontalGlue());
-        hboxMemoryType.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+       // hboxMemoryType.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 
         Box hboxMemory = Box.createHorizontalBox();
         //hboxMemory.add(Box.createHorizontalStrut(100));
@@ -215,11 +222,12 @@ public class MainFrame extends JFrame {
 
         Box hboxMemoryButtons = Box.createHorizontalBox();
         hboxMemoryButtons.add(buttonMemoryPlus);
+        hboxMemoryButtons.add(Box.createHorizontalStrut(40));
         hboxMemoryButtons.add(buttonMemoryClear);
 
 
 
-// Создать область с полями ввода для X и Y
+        // Поля ввода Х, Y, Z
         JLabel labelForX = new JLabel("X:");
         textFieldX = new JTextField("0", 10);
         textFieldX.setMaximumSize(textFieldX.getPreferredSize());
@@ -230,9 +238,9 @@ public class MainFrame extends JFrame {
         textFieldZ = new JTextField("0", 10);
         textFieldZ.setMaximumSize(textFieldZ.getPreferredSize());
 
-
+        // коробка с переменными
         Box hboxVariables = Box.createHorizontalBox();
-        hboxVariables.setBorder(BorderFactory.createLineBorder(Color.RED));
+        //hboxVariables.setBorder(BorderFactory.createLineBorder(Color.RED));
         hboxVariables.add(Box.createHorizontalGlue());
         hboxVariables.add(labelForX);
         hboxVariables.add(Box.createHorizontalStrut(10));
@@ -247,19 +255,21 @@ public class MainFrame extends JFrame {
         hboxVariables.add(textFieldZ);
         hboxVariables.add(Box.createHorizontalGlue());
 
-// Создать область для вывода результата
+        //  область для вывода результата
         JLabel labelForResult = new JLabel("Результат:");
-//labelResult = new JLabel("0");
         textFieldResult = new JTextField("0", 10);
         textFieldResult.setMaximumSize(textFieldResult.getPreferredSize());
+
+        // коробка результата
         Box hboxResult = Box.createHorizontalBox();
         hboxResult.add(Box.createHorizontalGlue());
         hboxResult.add(labelForResult);
         hboxResult.add(Box.createHorizontalStrut(10));
         hboxResult.add(textFieldResult);
         hboxResult.add(Box.createHorizontalGlue());
-        hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-// Создать область для кнопок
+        //hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+
+        // область для кнопок
         JButton buttonCalc = new JButton("Вычислить");
         buttonCalc.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -279,6 +289,7 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+
         JButton buttonReset = new JButton("Очистить поля");
         buttonReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -288,18 +299,22 @@ public class MainFrame extends JFrame {
                 textFieldResult.setText("0");
             }
         });
+
+        // кнопки вычислить и очистить
         Box hboxButtons = Box.createHorizontalBox();
-        hboxButtons.add(Box.createHorizontalGlue());
+        // hboxButtons.add(Box.createHorizontalGlue());
+        hboxButtons.add(Box.createHorizontalStrut(20));
         hboxButtons.add(buttonCalc);
-        hboxButtons.add(Box.createHorizontalStrut(30));
+        hboxButtons.add(Box.createHorizontalStrut(40));
         hboxButtons.add(buttonReset);
-        hboxButtons.add(Box.createHorizontalGlue());
-        hboxButtons.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+       // hboxButtons.add(Box.createHorizontalGlue());
+        //hboxButtons.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
 
-// Связать области воедино в компоновке BoxLayout
+        // Связать области воедино в компоновке BoxLayout
+        // вывод
         Box contentBox = Box.createVerticalBox();
-        contentBox.add(Box.createVerticalGlue());
+         contentBox.add(Box.createVerticalGlue());
         contentBox.add(hboxFormulaImage);
         contentBox.add(hboxFormulaType);
         contentBox.add(hboxVariables);
@@ -308,7 +323,6 @@ public class MainFrame extends JFrame {
         contentBox.add(hboxMemoryType);
         contentBox.add(hboxMemory);
         contentBox.add(hboxMemoryButtons);
-
         contentBox.add(hboxButtons);
         contentBox.add(Box.createVerticalGlue());
         getContentPane().add(contentBox, BorderLayout.CENTER);
